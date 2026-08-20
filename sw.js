@@ -2,7 +2,7 @@
  * 策略：对同源 GET 请求走「缓存优先，网络兜底」；
  * 首次加载后页面与资源被缓存，断网仍可从主屏图标打开。
  */
-const CACHE = 'personal-ledger-app-v2';
+const CACHE = 'personal-ledger-app-v3';
 
 const PRECACHE = [
   './',
