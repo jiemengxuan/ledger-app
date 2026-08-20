@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>个人记账本</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="description" content="本地记账与攒钱计划，数据保存在本机。">
 
   <!-- iOS 主屏全屏 App 体验 -->
@@ -21,8 +21,8 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; min-height: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; background: #000000; color: #cfcfcf; }
-    #root { width: 100%; margin-left: auto; margin-right: auto; height: 100%; min-height: 100vh; overflow: visible; background: #000000; }
+    html, body { width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; background: #000000; color: #cfcfcf; touch-action: manipulation; -webkit-text-size-adjust: 100%; }
+    #root { width: 100%; height: 100%; overflow: hidden; background: #000000; }
     @media (max-width: 1024px) {
       ::-webkit-scrollbar { display: none; }
       html, body { scrollbar-width: none; }
