@@ -2,12 +2,23 @@
  * 策略：对同源 GET 请求走「缓存优先，网络兜底」；
  * 首次加载后页面与资源被缓存，断网仍可从主屏图标打开。
  */
-const CACHE = 'personal-ledger-app-v1';
+const CACHE = 'personal-ledger-app-v2';
+
+const PRECACHE = [
+  './',
+  './index.html',
+  './app.js',
+  './chunks/vendor-react.js',
+  './manifest.webmanifest',
+  './icon.png',
+  './icon-192.png',
+  './icon-512.png',
+];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(['./', './index.tsx'])).catch(() => {}),
+    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).catch(() => {}),
   );
 });
 
