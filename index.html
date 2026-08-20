@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <title>个人记账本</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="本地记账与攒钱计划，数据保存在本机。">
+
+  <!-- iOS 主屏全屏 App 体验 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="记账本">
+  <meta name="theme-color" content="#2e8b57">
+  <link rel="apple-touch-icon" href="./icon.png">
+  <link rel="icon" type="image/png" href="./icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; }
+    #root { width: 100%; margin-left: auto; margin-right: auto; height: 100%; min-height: 100vh; overflow: visible; }
+    @media (max-width: 1024px) {
+      ::-webkit-scrollbar { display: none; }
+      html, body { scrollbar-width: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="module">
+    // 1) 提供 React / ReactDOM 全局（IIFE 组件包以 React 为参数立即执行，需要先就绪）
+    import { R as React, c as createRoot } from './chunks/vendor-react.js';
+    window.React = React;
+    window.ReactDOM = { createRoot };
+
+    // 2) 组件 IIFE 通过该回调把自身注册到 window.UserComponent
+    window.__AXHUB_DEFINE_COMPONENT__ = (component) => { window.UserComponent = component; };
+
+    // 3) 执行组件 IIFE（注册组件）
+    await import('./app.js');
+
+    // 4) 渲染
+    const registered = window.UserComponent;
+    const Component = registered?.Component || registered?.default || registered;
+    const root = document.getElementById('root');
+    if (Component && root) {
+      createRoot(root).render(
+        React.createElement(Component, { container: root, config: {}, data: {}, events: {} }),
+      );
+    } else {
+      root.innerHTML = '<div style="padding:40px;text-align:center;color:#999;font-family:sans-serif"><h2>加载失败</h2><p>请刷新重试</p></div>';
+    }
+  </script>
+</body>
+
+</html>

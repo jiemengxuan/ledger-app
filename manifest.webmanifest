@@ -1,0 +1,17 @@
+{
+  "name": "个人记账本",
+  "short_name": "记账本",
+  "description": "本地记账与攒钱计划，数据保存在本机。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f8f2",
+  "theme_color": "#2e8b57",
+  "icons": [
+    { "src": "./icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
