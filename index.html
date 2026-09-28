@@ -44,6 +44,9 @@
 
     // 3) 执行组件 IIFE（注册组件）
     await import('./app.js');
+    await import('./smart-ledger.js');
+    await import('./month-viz.js');
+    await import('./year-viz.js');
 
     // 4) 渲染
     const registered = window.UserComponent;

@@ -2,12 +2,15 @@
  * 策略：对同源 GET 请求走「缓存优先，网络兜底」；
  * 首次加载后页面与资源被缓存，断网仍可从主屏图标打开。
  */
-const CACHE = 'personal-ledger-app-v2.1';
+const CACHE = 'personal-ledger-app-v2.59';
 
 const PRECACHE = [
   './',
   './index.html',
   './app.js',
+  './smart-ledger.js',
+  './month-viz.js',
+  './year-viz.js',
   './chunks/vendor-react.js',
   './manifest.webmanifest',
   './icon.png',
