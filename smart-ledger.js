@@ -130,7 +130,7 @@
       }
     }
     if (matched) t = t.replace(matched, ' ');
-    return { date: result, cleaned: t, found: !!matched };
+    return { date: result, cleaned: t, found: !!matched, matched: matched || '' };
   }
 
   var MONEY_UNITS = { '万': 10000, '千': 1000, '百': 100, '元': 1, '块钱': 1, '块': 1, '毛': 0.1, '角': 0.1, '分': 0.01, 'k': 1000, 'K': 1000, 'w': 10000, 'W': 10000 };
@@ -303,12 +303,56 @@
     return out;
   }
 
-  /* 多句拆分：按中文/英文逗号、顿号、分号、句号、换行拆 */
+  /* 无标点时按「多个金额」切开：如「打台球50吃饭50」→「打台球50」「吃饭50」 */
+  function splitMergedAmounts(text) {
+    var original = String(text || '').trim();
+    if (!original) return [];
+    var d = extractDate(original);
+    var t = String(d.cleaned || '').replace(/\s+/g, '').trim();
+    if (!t) return [original];
+
+    // 金额片段：35 / 35.5 / 35元 / 35块 / 35块6
+    var re = /\d+(?:\.\d+)?(?:元|块钱|块(?:\d(?:\.\d+)?)?|毛|角|分|[kKwW]|万|千|百)?/g;
+    var matches = [];
+    var m;
+    while ((m = re.exec(t))) {
+      matches.push({ start: m.index, end: m.index + m[0].length });
+    }
+    if (matches.length <= 1) return [original];
+
+    var chunks = [];
+    var prev = 0;
+    for (var i = 0; i < matches.length; i++) {
+      var chunk = t.slice(prev, matches[i].end).trim();
+      // 金额前没有说明文字则并入上一段（避免误拆）
+      var amtLen = matches[i].end - matches[i].start;
+      var head = chunk.slice(0, Math.max(0, chunk.length - amtLen));
+      if ((!head || !/[\u4e00-\u9fffA-Za-z]/.test(head)) && chunks.length) {
+        chunks[chunks.length - 1] += chunk;
+      } else if (chunk) {
+        chunks.push(chunk);
+      }
+      prev = matches[i].end;
+    }
+    if (!chunks.length) return [original];
+
+    // 把抽走的日期词补回第一段，方便后面日期继承
+    if (d.found && d.matched) chunks[0] = d.matched + chunks[0];
+    return chunks;
+  }
+
+  /* 多句拆分：先按标点拆，再对无标点粘连的多笔按金额切开 */
   function splitClauses(raw) {
     var t = String(raw || '').trim();
     if (!t) return [];
     var parts = t.split(/[，,、；;。\n\r]+/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
-    return parts.length ? parts : [t];
+    if (!parts.length) parts = [t];
+    var out = [];
+    for (var i = 0; i < parts.length; i++) {
+      var sub = splitMergedAmounts(parts[i]);
+      for (var j = 0; j < sub.length; j++) out.push(sub[j]);
+    }
+    return out.length ? out : [t];
   }
 
   /* 一句话多笔：逐句解析，日期/类型向前继承（如"昨天吃饭100，打车20"两句都是昨天、支出） */
